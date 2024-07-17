@@ -226,7 +226,10 @@ def prepare_models(
     models_attack = []
     for i in range(len(model_backbones)):
         model = backbone_dict[model_backbones[i]]
-        model.load_state_dict(torch.load(model_roots[i], map_location=device))
+        state_dict = torch.hub.load_state_dict_from_url(
+            model_roots[i], map_location=device, progress=True
+        )
+        model.load_state_dict(state_dict)
         models_attack.append(model)
 
     if using_subspace:
