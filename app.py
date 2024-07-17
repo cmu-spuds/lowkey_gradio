@@ -8,6 +8,7 @@ from util.prepare_utils import prepare_models, prepare_dir_vec, get_ensemble
 from align.detector import detect_faces
 from align.align_trans import get_reference_facial_points, warp_and_crop_face
 import torchvision.transforms as transforms
+import spaces
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(device)
@@ -30,10 +31,10 @@ using_subspace = False
 V_reduction_root = "./"
 model_backbones = ["IR_152", "IR_152", "ResNet_152", "ResNet_152"]
 model_roots = [
-    "models/Backbone_IR_152_Arcface_Epoch_112.pth",
-    "models/Backbone_IR_152_Cosface_Epoch_70.pth",
-    "models/Backbone_ResNet_152_Arcface_Epoch_65.pth",
-    "models/Backbone_ResNet_152_Cosface_Epoch_68.pth",
+    "https://github.com/cmu-spuds/lowkey_gradio/releases/download/weights/Backbone_IR_152_Arcface_Epoch_112.pth",
+    "https://github.com/cmu-spuds/lowkey_gradio/releases/download/weights/Backbone_IR_152_Cosface_Epoch_70.pth",
+    "https://github.com/cmu-spuds/lowkey_gradio/releases/download/weights/Backbone_ResNet_152_Arcface_Epoch_65.pth",
+    "https://github.com/cmu-spuds/lowkey_gradio/releases/download/weights/Backbone_ResNet_152_Cosface_Epoch_68.pth",
 ]
 direction = 1
 crop_size = 112
@@ -51,6 +52,7 @@ models_attack, V_reduction, dim = prepare_models(
 )
 
 
+@spaces.GPU
 def protect(img):
     img = Image.fromarray(img)
     reference = get_reference_facial_points(default_square=True) * scale
@@ -110,7 +112,7 @@ def protect(img):
 
 gr.Interface(
     fn=protect,
-    inputs=gr.components.Image(shape=(512, 512)),
+    inputs=gr.components.Image(height=512, width=512),
     outputs=gr.components.Image(type="pil"),
     allow_flagging="never",
-).launch(show_error=True, quiet=False, share=True)
+).launch(show_error=True, quiet=False, share=False)
