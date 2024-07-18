@@ -11,7 +11,6 @@ import torchvision.transforms as transforms
 import spaces
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(device)
 to_tensor = transforms.ToTensor()
 
 eps = 0.05
@@ -40,20 +39,27 @@ direction = 1
 crop_size = 112
 scale = crop_size / 112.0
 
-models_attack, V_reduction, dim = prepare_models(
-    model_backbones,
-    input_size,
-    model_roots,
-    kernel_size_gf,
-    sigma_gf,
-    combination,
-    using_subspace,
-    V_reduction_root,
-)
+for root in model_roots:
+    torch.hub.load_state_dict_from_url(root, map_location=device, progress=True)
 
 
 @spaces.GPU
-def protect(img):
+def execute(attack, tensor_img, dir_vec):
+    return attack.execute(tensor_img, dir_vec, direction).detach().cpu()
+
+
+def protect(img, progress=gr.Progress(track_tqdm=True)):
+    models_attack, V_reduction, dim = prepare_models(
+        model_backbones,
+        input_size,
+        model_roots,
+        kernel_size_gf,
+        sigma_gf,
+        combination,
+        using_subspace,
+        V_reduction_root,
+    )
+
     img = Image.fromarray(img)
     reference = get_reference_facial_points(default_square=True) * scale
     h, w, c = np.array(img).shape
@@ -104,7 +110,7 @@ def protect(img):
         theta_warp=theta,
         V_reduction=V_reduction,
     )
-    img_attacked = attack.execute(tensor_img, dir_vec, direction).detach().cpu()
+    img_attacked = execute(attack, tensor_img, dir_vec)
 
     img_attacked_pil = transforms.ToPILImage()(img_attacked[0])
     return img_attacked_pil
