@@ -6,8 +6,8 @@ from torch.autograd import Variable
 from util.feature_extraction_utils import warp_image, normalize_batch
 from util.prepare_utils import get_ensemble, extract_features
 from lpips_pytorch import LPIPS
+from tqdm import trange
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 tensor_transform = transforms.ToTensor()
 pil_transform = transforms.ToPILImage()
 
@@ -51,9 +51,11 @@ class Attack(nn.Module):
         self.warp = warp
         self.theta_warp = theta_warp
         if self.attack_type == "lpips":
-            self.lpips_loss = LPIPS(self.net_type).to(device)
+            self.lpips_loss = LPIPS(self.net_type)
 
     def execute(self, images, dir_vec, direction):
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.lpips_loss.to(device)
         images = Variable(images).to(device)
         dir_vec = dir_vec.to(device)
         # take norm wrt dim
@@ -76,7 +78,7 @@ class Attack(nn.Module):
                 images.detach().clone() + noise_uniform, requires_grad=True
             ).to(device)
 
-            for i in range(self.n_iters):
+            for i in trange(self.n_iters):
                 adv_features = extract_features(
                     adv_images, self.extractor_ens, self.dim
                 ).to(device)
@@ -115,10 +117,10 @@ class Attack(nn.Module):
             else:
                 adv_images[dist > dist_old] = adv_images_old[dist > dist_old]
                 dist[dist > dist_old] = dist_old[dist > dist_old]
-
         return adv_images.detach().cpu()
 
     def lpips_reg(self, images, adv_images):
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         if self.warp:
             face_adv = warp_image(adv_images, self.theta_warp)
             lpips_out = self.lpips_loss(
