@@ -44,10 +44,6 @@ for root in model_roots:
 
 
 @spaces.GPU(duration=120)
-def execute(attack, tensor_img, dir_vec):
-    return attack.execute(tensor_img, dir_vec, direction).detach().cpu()
-
-
 def protect(img, progress=gr.Progress(track_tqdm=True)):
     models_attack, V_reduction, dim = prepare_models(
         model_backbones,
@@ -110,7 +106,7 @@ def protect(img, progress=gr.Progress(track_tqdm=True)):
         theta_warp=theta,
         V_reduction=V_reduction,
     )
-    img_attacked = execute(attack, tensor_img, dir_vec)
+    img_attacked = attack.execute(tensor_img, dir_vec, direction).detach().cpu()
 
     img_attacked_pil = transforms.ToPILImage()(img_attacked[0])
     return img_attacked_pil
