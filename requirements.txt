@@ -1,11 +1,9 @@
 gradio
-numpy<2.0
+numpy
 Pillow
 tqdm
 opencv-python
 git+https://github.com/logasja/lpips-pytorch
 spaces
---extra-index-url https://download.pytorch.org/whl/cu118
-torch<=2.2.0
---extra-index-url https://download.pytorch.org/whl/cu118
-torchvision<=0.17
+torch
+torchvision
