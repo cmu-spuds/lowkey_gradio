@@ -7,4 +7,5 @@ git+https://github.com/logasja/lpips-pytorch
 spaces
 --extra-index-url https://download.pytorch.org/whl/cu118
 torch
+--extra-index-url https://download.pytorch.org/whl/cu118
 torchvision
