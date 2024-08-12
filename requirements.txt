@@ -5,4 +5,4 @@ torchvision>=0.18.1
 tqdm>=4.66.4
 opencv-python>=4.10.0.84
 git+https://github.com/logasja/lpips-pytorch
-spaces>=0.28.3
+spaces==0.28.3
