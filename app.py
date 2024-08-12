@@ -1,4 +1,5 @@
 import gradio as gr
+import spaces
 import torch
 from PIL import Image
 import numpy as np
@@ -8,7 +9,6 @@ from util.prepare_utils import prepare_models, prepare_dir_vec, get_ensemble
 from align.detector import detect_faces
 from align.align_trans import get_reference_facial_points, warp_and_crop_face
 import torchvision.transforms as transforms
-import spaces
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 to_tensor = transforms.ToTensor()
