@@ -5,11 +5,10 @@ import torchvision.transforms as transforms
 import torch.nn as nn
 import numpy as np
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
 
 def warp_image(tensor_img, theta_warp, crop_size=112):
     # applies affine transform theta to image and crops it
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     theta_warp = torch.Tensor(theta_warp).unsqueeze(0).to(device)
     grid = F.affine_grid(theta_warp, tensor_img.size())

@@ -10,7 +10,6 @@ from align.detector import detect_faces
 from align.align_trans import get_reference_facial_points, warp_and_crop_face
 import torchvision.transforms as transforms
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 to_tensor = transforms.ToTensor()
 
 eps = 0.05
@@ -45,6 +44,8 @@ for root in model_roots:
 
 @spaces.GPU(duration=120)
 def protect(img, progress=gr.Progress(track_tqdm=True)):
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
     models_attack, V_reduction, dim = prepare_models(
         model_backbones,
         input_size,

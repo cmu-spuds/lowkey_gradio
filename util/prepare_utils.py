@@ -123,6 +123,8 @@ def get_ensemble(
     warp=False,
     theta_warp=None,
 ):
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
     # function prepares ensemble of feature extractors
     # outputs list of pytorch nn models
     feature_extractor_ensemble = []
@@ -213,6 +215,8 @@ def prepare_models(
     using_subspace,
     V_reduction_root,
 ):
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
     backbone_dict = {
         "IR_50": IR_50(input_size),
         "IR_152": IR_152(input_size),
