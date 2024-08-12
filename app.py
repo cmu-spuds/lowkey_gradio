@@ -40,10 +40,10 @@ crop_size = 112
 scale = crop_size / 112.0
 
 for root in model_roots:
-    torch.hub.load_state_dict_from_url(root, map_location="device", progress=True)
+    torch.hub.load_state_dict_from_url(root, map_location="cpu", progress=True)
 
 
-@spaces.GPU()
+@spaces.GPU(duration=120)
 def execute(attack, tensor_img, dir_vec):
     return attack.execute(tensor_img, dir_vec, direction).detach().cpu()
 
