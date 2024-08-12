@@ -1,8 +1,10 @@
-gradio>=4.38.1
-numpy>=2.0.0
-Pillow>=10.4.0
-torchvision>=0.18.1
-tqdm>=4.66.4
-opencv-python>=4.10.0.84
+gradio
+numpy
+Pillow
+tqdm
+opencv-python
 git+https://github.com/logasja/lpips-pytorch
-spaces==0.28.3
+spaces
+--extra-index-url https://download.pytorch.org/whl/cu118
+torch
+torchvision
