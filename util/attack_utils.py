@@ -55,7 +55,7 @@ class Attack(nn.Module):
 
     def execute(self, images, dir_vec, direction):
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        print("Device in Excute:", device)
+        # print("Device in Excute:", device)
         self.lpips_loss.to(device)
         images = Variable(images).to(device)
         dir_vec = dir_vec.to(device)
